@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guess My number</title>
+    <style>
+      :root {
+        --primary-color: #6366f1;
+        --text-color: #1f2937;
+        --background-color: #f3f4f6;
+        --border-color: #e5e7eb;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--background-color);
+        font-family: system-ui, -apple-system, sans-serif;
+        color: var(--text-color);
+        min-height: 100vh;
+        padding: 2rem;
+        overflow-x: hidden;
+      }
+
+      .main {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      }
+
+      button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, opacity 0.2s;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+
+      button:active {
+        transform: scale(0.98);
+      }
+
+      .result {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin: 2rem 0;
+      }
+
+      .mid {
+        background-color: white;
+        padding: 2rem 3rem;
+        border-radius: 1rem;
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        position: relative;
+        z-index: 2;
+      }
+
+      hr {
+        width: 100%;
+        height: 2px;
+        background-color: var(--border-color);
+        position: absolute;
+        z-index: 1;
+      }
+
+      .input-number {
+        width: 180px;
+        padding: 0.75rem;
+        font-size: 1.5rem;
+        border: 2px solid var(--border-color);
+        border-radius: 0.5rem;
+        text-align: center;
+        transition: border-color 0.2s;
+        margin-bottom: 1rem;
+      }
+
+      .input-number:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+
+      form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .input {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      }
+
+      .final-result p {
+        font-size: 1.25rem;
+        color: var(--text-color);
+        margin: 1rem 0;
+        text-align: center;
+      }
+
+      .blink {
+        animation: blink-animation 1.5s ease-in-out infinite;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 1rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        z-index: 1000;
+      }
+
+      .close {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #ef4444;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #fee2e2;
+      }
+
+      .close:hover {
+        background: #fecaca;
+      }
+
+      img {
+        max-width: 450px;
+        border-radius: 0.75rem;
+      }
+
+      @keyframes blink-animation {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      @media screen and (max-width: 480px) {
+        .header {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+
+        h1, h2 {
+          font-size: 1.25rem;
+        }
+
+        .mid {
+          font-size: 2rem;
+          padding: 1.5rem 2rem;
+          text-align: center;
+        }
+
+        .input-number {
+          width: 180px;
+          font-size: 1.25rem;
+        }
+
+        button {
+          padding: 0.5rem 1rem;
+          font-size: 0.875rem;
+        }
+
+        .input {
+          padding: 1rem;
+        }
+
+        img {
+          width: 100%;
+          max-width: 280px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="header">
+        <button type="reset" onclick="reset()">Restart</button>
+        <h1 class="blink">Guess My Number</h1>
+        <h2>&#60; Guess between 0 to 20 &#62;</h2>
+      </div>
+
+      <div class="result">
+        <p class="mid">?</p>
+        <hr />
+      </div>
+
+      <div class="input">
+        <form action="/">
+          <input type="number" name="number" class="input-number" min="0" max="20" placeholder="Enter guess" />
+          <button type="submit" id="checkbtn" onclick="check()">Check</button>
+        </form>
+        <div class="final-result">
+          <p>Start Guessing...?</p>
+        </div>
+
+        <span class="modal">
+          <span class="close">×</span>
+          <img src="https://i.pinimg.com/originals/4c/62/b8/4c62b8664b2aa5d5c16e080936e52a88.gif" alt="Success celebration" />
+        </span>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
